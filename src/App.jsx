@@ -4,36 +4,80 @@ import Favorites from './pages/Favorites'
 import PageNotFound from './pages/PageNotFound'
 import Navigation from './components/Navigation'
 import './App.css'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+
+const url = 'http://localhost:3000/contacts'
 
 function App() {
   const [contacts, setContacts] = useState([])
-
-  const formSub = (data) => {
-    setContacts([...contacts, data])
-  }
-
-  const onDelete = (id) => {
-    let newContacts = contacts.filter((contact) => contact.id !== id)
-    setContacts(newContacts)
-  }
-
-  const toggleFavorite = (id) => {
-    // let newContacts = contacts.map((contact) => {
-    //   if (contact.id === id) {
-    //     contact.favorite = !contact.favorite
-    //   }
-    //   return contact
-    // })
-    // setContacts(newContacts)
-
-    let newContacts = contacts.map((contact) => {
-      return contact.id === id
-        ? { ...contact, favorite: !contact.favorite }
-        : contact
+  
+  useEffect(() => { 
+    fetchContacts().then(result => {
+      const resFromServer = result
+      setContacts(resFromServer)
     })
-    setContacts(newContacts)
+  }, [])
+
+  const formSub = async(data) => {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const resData = await res.json()
+
+    res.ok ? setContacts([...contacts, resData]) : alert('Error')
+  }
+
+  const fetchContacts = async () => { 
+    const res = await fetch(url)
+    const data = await res.json()
+    return data
+  }
+
+   const getContact = async (id) => {
+     const res = await fetch(`${url}/${id}`)
+     const data = await res.json()
+     return data
+   }
+
+  const onDelete = async(id) => {
+     const res = await fetch(`${url}/${id}`, {
+       method: 'DELETE',
+     })
+    
+    if (res.status === 200) {
+      let newContacts = contacts.filter((contact) => contact.id !== id)
+      setContacts(newContacts)
+      alert('Contact deleted')
+    }
+    else alert('Error')
+    
+  }
+
+  const toggleFavorite = async (id) => {
+    const singleContact = await getContact(id)
+    const updateTask = { ...singleContact, favorite: !singleContact.favorite }
+    
+     const res = await fetch(`${url}/${id}`, {
+       method: 'PUT',
+       body: JSON.stringify(updateTask),
+       headers: {
+         'Content-Type': 'application/json',
+       },
+     })
+      
+     if (res.status === 200) {
+        let newContacts = contacts.map((contact) => {
+          return contact.id === id
+            ? { ...contact, favorite: !contact.favorite }
+            : contact
+        })
+        setContacts(newContacts)
+     }
+     
   }
 
   return (

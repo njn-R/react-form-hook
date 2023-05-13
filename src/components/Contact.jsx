@@ -8,7 +8,7 @@ const Contact = ({
   return (
     <div
       className='card rounded shadow text-center'
-      style={{ width: '18rem', height: '200px' }}
+      style={{ width: '18rem', height: '230px', margin: '10px' }}
     >
       <div className='card-body'>
         <div style={{ cursor: 'pointer' }} onClick={() => toggleFavorite(id)}>

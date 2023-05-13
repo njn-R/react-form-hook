@@ -1,0 +1,11 @@
+{
+  "contacts": [
+    {
+      "name": "Tom",
+      "email": "tom@gmail.com",
+      "phone": "8795462579",
+      "id": 1683868105853,
+      "favorite": true
+    }
+  ]
+}
