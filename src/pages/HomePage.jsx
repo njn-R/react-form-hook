@@ -2,7 +2,7 @@ import React from 'react'
 import Contact from '../components/Contact'
 import Form from '../components/Form'
 
-const HomePage = ({ formSub, contacts, onDelete, toggleFavorite }) => {
+const HomePage = ({ formSub, contacts, onDelete, toggleFavorite, onSave }) => {
   return (
     <div className='container'>
       <div className='row justify-content-sm-center my-5'>
@@ -14,6 +14,7 @@ const HomePage = ({ formSub, contacts, onDelete, toggleFavorite }) => {
               contact={contact}
               onDelete={onDelete}
               toggleFavorite={toggleFavorite}
+              onSave={onSave}
             />
           )
         })}
